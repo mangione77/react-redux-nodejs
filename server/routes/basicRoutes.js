@@ -1,8 +1,8 @@
-const express = require('express')
+import express from 'express'
 const basicRoutes = express()
 
-const helloWorld = require('../controllers/helloWorld')
+import helloWorld from '../controllers/helloWorld'
 
 basicRoutes.get("/", helloWorld.get)
 
-module.exports = basicRoutes
+export default basicRoutes
