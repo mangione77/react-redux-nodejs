@@ -16,6 +16,7 @@ class SignUpFrom extends Component {
 		this.usernameHandler = this.usernameHandler.bind(this)
 		this.passwordHandler = this.passwordHandler.bind(this)
 		this.passwordConfirmHandler = this.passwordConfirmHandler.bind(this)
+		this.locationHandler = this.locationHandler.bind(this)
 		this.emailHandler = this.emailHandler.bind(this)
 		this.submitHandler = this.submitHandler.bind(this)
 	}
@@ -48,6 +49,12 @@ class SignUpFrom extends Component {
 		})
 	}
 
+	locationHandler(event) {
+		event.preventDefault()		
+		this.setState({
+			location:event.target.value
+		})
+	}
 
 	submitHandler(event) {
 		event.preventDefault()
@@ -90,7 +97,7 @@ class SignUpFrom extends Component {
 					<option value="" disabled>Choose Your Location</option>
 						{
 							timezones.map(location => {
-								return <option value={location.name}>{location.name}</option>
+								return <option value={location.name} key={location.code}>{location.name}</option>
 							})
 						}
 					</select>
