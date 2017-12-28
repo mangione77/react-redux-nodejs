@@ -4,7 +4,7 @@ import webpack from 'webpack'
 const webpackConfig = {
 	devtool: 'eval-source-map',
 	entry: [
-		'webpack-hot-middleware/client',
+		'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr&reload=true`',
 		path.join(__dirname, '/client/index.js')
 	],
 	output: {
