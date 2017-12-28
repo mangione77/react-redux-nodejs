@@ -58,7 +58,7 @@ class SignUpFrom extends Component {
 
 	submitHandler(event) {
 		event.preventDefault()
-		console.log(this.state)
+		this.props.signUpRequest(this.state)
 	}
 
 	render() {

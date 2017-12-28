@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { userSignUpRequest } from '../../actions/SignUpAction'
 
 import SignUpForm from '../SignUpForm'
 
@@ -9,7 +11,7 @@ class SignupPage extends Component {
 			<Grid>
 				<Row>
 					<Col lg={4} lgOffset={4}>
-						<SignUpForm />
+						<SignUpForm signUpRequest={this.props.signUpRequest} />
 					</Col>
 				</Row>
 			</Grid>
@@ -17,4 +19,5 @@ class SignupPage extends Component {
 	}
 }
 
-export default SignupPage
+
+export default connect(state => { return {} }, { userSignUpRequest })(SignupPage)
