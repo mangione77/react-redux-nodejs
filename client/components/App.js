@@ -1,10 +1,13 @@
 import React from 'react'
 
+import NavBar from './NavBar'
+
 class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>asdasdsadasdasdasdasda</h1>
+				<NavBar />
+				{this.props.children}
 			</div>
 		)
 	}
