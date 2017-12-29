@@ -4,6 +4,9 @@ import classnames from 'classnames'
 import validateInput from '../../server/utils/validateInput'
 import PropTypes from 'prop-types'
 
+// Needed to redirect
+import { withRouter } from 'react-router-dom'
+
 import TextFieldGroup from './common/TextFieldGroup'
 
 class SignUpFrom extends Component {
@@ -88,16 +91,14 @@ class SignUpFrom extends Component {
 
 			this.props.signUpRequest(this.state)
 				.then(response => {
-					// TODO: Redirect to???
-					console.log('RESPONSE ', response)
+					// SEE: http://bit.ly/2EcM0Mx
+					this.props.history.push('/');
 				})
 				.catch(errors => {
 					// If there are any errors, set it as a state prop so we can render them.
 					this.setState({
 						errors:errors.response.data,
 						isLoading:false
-					}, () => {
-						console.log(this.state.errors)
 					})
 				})
 		}
@@ -131,6 +132,7 @@ class SignUpFrom extends Component {
 						label="Password"
 						onChange={this.passwordHandler}
 						value={this.state.password}
+						type="password"
 						field="password"
 					/>	
 
@@ -139,6 +141,7 @@ class SignUpFrom extends Component {
 						label="Confirm your password"
 						onChange={this.passwordConfirmHandler}
 						value={this.state.passwordConfirm}
+						type="password"
 						field="passwordConfirm"
 					/>
 
@@ -170,4 +173,4 @@ class SignUpFrom extends Component {
 	}
 }
 
-export default SignUpFrom
+export default withRouter(SignUpFrom)

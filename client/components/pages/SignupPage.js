@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { userSignUpRequest } from '../../actions/SignUpAction'
+import PropTypes from 'prop-types'
 
 import SignUpForm from '../SignUpForm'
 
@@ -18,6 +19,5 @@ class SignupPage extends Component {
 		)
 	}
 }
-
 
 export default connect(state => { return {} }, { userSignUpRequest })(SignupPage)
