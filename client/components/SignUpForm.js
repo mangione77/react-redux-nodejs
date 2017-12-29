@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import timezones from '../data/timezones'
+import classnames from 'classnames'
 
 class SignUpFrom extends Component {
 	constructor() {
@@ -10,7 +11,9 @@ class SignUpFrom extends Component {
 			password:'',
 			passwordConfirm:'',
 			email:'',
-			location:''
+			location:'',
+			errors:{},
+			isLoading:false
 		}
 
 		this.usernameHandler = this.usernameHandler.bind(this)
@@ -57,8 +60,22 @@ class SignUpFrom extends Component {
 	}
 
 	submitHandler(event) {
+		// clear errors and set to loading
+		this.setState({ errors:{}, isLoading: true })
+		// Submit the form	
 		event.preventDefault()
 		this.props.signUpRequest(this.state)
+			.then(response => {
+				console.log('RESPONSE ', response)
+			})
+			.catch(errors => {
+				this.setState({
+					errors:errors.response.data,
+					isLoading:false
+				}, () => {
+					console.log(this.state.errors)
+				})
+			})
 	}
 
 	render() {
@@ -66,7 +83,7 @@ class SignUpFrom extends Component {
 			<form onSubmit={this.submitHandler}>
 				<h1>Join today!</h1>
 				<div className="form-group">
-					<div className="form-group">
+					<div className={classnames("form-group", { 'has-error': this.state.errors.username}) }>
 					<label className="control-label">Username</label>
 					<input
 						value={this.state.username}
@@ -75,9 +92,10 @@ class SignUpFrom extends Component {
 						name="username"
 						className="form-control"
 					/>
+					{this.state.errors.username && <span className="help-block">{this.state.errors.username}</span>}
 					</div>
 
-					<div className="form-group">					
+					<div className={classnames("form-group", { 'has-error': this.state.errors.email}) }>					
 					<label className="control-label">E-mail</label>					
 					<input
 						onChange={this.emailHandler}
@@ -85,9 +103,10 @@ class SignUpFrom extends Component {
 						name="email"
 						className="form-control"
 					/>
+					{this.state.errors.email && <span className="help-block">{this.state.errors.email}</span>}					
 					</div>
 
-					<div className="form-group">
+					<div className={classnames("form-group", { 'has-error': this.state.errors.location}) }>
 					<label className="control-label">Country</label>					
 					<select
 						className="form-control"
@@ -101,10 +120,10 @@ class SignUpFrom extends Component {
 							})
 						}
 					</select>
-
+					{this.state.errors.location && <span className="help-block">{this.state.errors.location}</span>}					
 					</div>					
 
-					<div className="form-group">					
+					<div className={classnames("form-group", { 'has-error': this.state.errors.password}) }>
 					<label className="control-label">Password</label>					
 					<input
 						onChange={this.passwordHandler}
@@ -112,9 +131,10 @@ class SignUpFrom extends Component {
 						name="password"
 						className="form-control"
 					/>
+					{this.state.errors.password && <span className="help-block">{this.state.errors.password}</span>}										
 					</div>
 
-					<div className="form-group">
+					<div className={classnames("form-group", { 'has-error': this.state.errors.passwordConfirm}) }>
 					<label className="control-label">Confirm your password</label>					
 					<input
 						onChange={this.passwordConfirmHandler}
@@ -122,9 +142,10 @@ class SignUpFrom extends Component {
 						name="passwordConfirm"
 						className="form-control"
 					/>
+					{this.state.errors.passwordConfirm && <span className="help-block">{this.state.errors.passwordConfirm}</span>}															
 					</div>
 
-					<div className="form-group">
+					<div disabled={this.state.isLoading} className="form-group">
 						<button className="btn btn-primary btn-lg">
 							Sign Up!
 						</button>
