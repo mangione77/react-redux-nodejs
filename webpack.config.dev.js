@@ -20,7 +20,7 @@ const webpackConfig = {
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			include: path.resolve(__dirname, 'client'),
+			include: [path.resolve(__dirname, 'client'), path.resolve(__dirname, 'server/utils')],
 			loaders: [ 'babel-loader' ]
 		}]
 	},

@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import timezones from '../data/timezones'
 import classnames from 'classnames'
+import validateInput from '../../server/utils/validateInput'
+import PropTypes from 'prop-types'
+
+import TextFieldGroup from './common/TextFieldGroup'
 
 class SignUpFrom extends Component {
 	constructor() {
@@ -59,23 +63,45 @@ class SignUpFrom extends Component {
 		})
 	}
 
+	// Client side validation. Is !isValid, the POST request won't be made
+	isValid() {
+		const { errors, isValid } = validateInput(this.state)
+
+		if (!isValid) {
+			this.setState({ errors })
+		}
+
+		return isValid
+	}
+
 	submitHandler(event) {
-		// clear errors and set to loading
-		this.setState({ errors:{}, isLoading: true })
-		// Submit the form	
 		event.preventDefault()
-		this.props.signUpRequest(this.state)
-			.then(response => {
-				console.log('RESPONSE ', response)
-			})
-			.catch(errors => {
-				this.setState({
-					errors:errors.response.data,
-					isLoading:false
-				}, () => {
-					console.log(this.state.errors)
+		
+		// If the user information is valid, then continue with the request
+		if (this.isValid()) {
+
+			// clear errors and set to loading
+
+			this.setState({ errors:{}, isLoading: true })
+
+			// Submit the form	
+
+			this.props.signUpRequest(this.state)
+				.then(response => {
+					// TODO: Redirect to???
+					console.log('RESPONSE ', response)
 				})
-			})
+				.catch(errors => {
+					// If there are any errors, set it as a state prop so we can render them.
+					this.setState({
+						errors:errors.response.data,
+						isLoading:false
+					}, () => {
+						console.log(this.state.errors)
+					})
+				})
+		}
+
 	}
 
 	render() {
@@ -83,28 +109,38 @@ class SignUpFrom extends Component {
 			<form onSubmit={this.submitHandler}>
 				<h1>Join today!</h1>
 				<div className="form-group">
-					<div className={classnames("form-group", { 'has-error': this.state.errors.username}) }>
-					<label className="control-label">Username</label>
-					<input
-						value={this.state.username}
+				
+					<TextFieldGroup
+						error={this.state.errors.username}
+						label="Username"
 						onChange={this.usernameHandler}
-						type="text"
-						name="username"
-						className="form-control"
+						value={this.state.username}
+						field="username"
 					/>
-					{this.state.errors.username && <span className="help-block">{this.state.errors.username}</span>}
-					</div>
-
-					<div className={classnames("form-group", { 'has-error': this.state.errors.email}) }>					
-					<label className="control-label">E-mail</label>					
-					<input
+					
+					<TextFieldGroup
+						error={this.state.errors.email}
+						label="E-mail"
 						onChange={this.emailHandler}
-						type="text"
-						name="email"
-						className="form-control"
+						value={this.state.email}
+						field="email"
+					/>					
+
+					<TextFieldGroup
+						error={this.state.errors.password}
+						label="Password"
+						onChange={this.passwordHandler}
+						value={this.state.password}
+						field="password"
+					/>	
+
+					<TextFieldGroup
+						error={this.state.errors.passwordConfirm}
+						label="Confirm your password"
+						onChange={this.passwordConfirmHandler}
+						value={this.state.passwordConfirm}
+						field="passwordConfirm"
 					/>
-					{this.state.errors.email && <span className="help-block">{this.state.errors.email}</span>}					
-					</div>
 
 					<div className={classnames("form-group", { 'has-error': this.state.errors.location}) }>
 					<label className="control-label">Country</label>					
@@ -121,29 +157,7 @@ class SignUpFrom extends Component {
 						}
 					</select>
 					{this.state.errors.location && <span className="help-block">{this.state.errors.location}</span>}					
-					</div>					
-
-					<div className={classnames("form-group", { 'has-error': this.state.errors.password}) }>
-					<label className="control-label">Password</label>					
-					<input
-						onChange={this.passwordHandler}
-						type="password"
-						name="password"
-						className="form-control"
-					/>
-					{this.state.errors.password && <span className="help-block">{this.state.errors.password}</span>}										
-					</div>
-
-					<div className={classnames("form-group", { 'has-error': this.state.errors.passwordConfirm}) }>
-					<label className="control-label">Confirm your password</label>					
-					<input
-						onChange={this.passwordConfirmHandler}
-						type="password"
-						name="passwordConfirm"
-						className="form-control"
-					/>
-					{this.state.errors.passwordConfirm && <span className="help-block">{this.state.errors.passwordConfirm}</span>}															
-					</div>
+					</div>						
 
 					<div disabled={this.state.isLoading} className="form-group">
 						<button className="btn btn-primary btn-lg">
